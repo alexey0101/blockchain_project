@@ -18,6 +18,8 @@ contract RockPapperScissors {
 
     event GameResult(address player1, address player2, string result);
 
+    event GameRefresh(address user);
+
     struct Player {
         address player;
         Choice choice;
@@ -39,7 +41,13 @@ contract RockPapperScissors {
     }
 
     Player[2] players;
-    State gameState = State.FirstCommit;
+    State public gameState = State.FirstCommit;
+
+    function refreshGame() public {
+        gameState = State.FirstCommit;
+
+        emit GameRefresh(msg.sender);
+    }
 
     function getHash(Choice choice, uint blinding) public view returns(bytes32){
         return keccak256(abi.encodePacked(msg.sender, choice, blinding));
